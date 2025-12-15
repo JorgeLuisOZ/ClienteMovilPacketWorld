@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="24dp"
+    tools:context=".LoginActivity">
+
+    <!-- Logo -->
+    <ImageView
+        android:id="@+id/img_logo"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@drawable/iconempresa"
+        android:contentDescription="Logo"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tv_titulo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="80dp"/>
+
+    <!-- Título -->
+    <TextView
+        android:id="@+id/tv_titulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bienvenido"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toBottomOf="@id/img_logo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Descripción -->
+    <TextView
+        android:id="@+id/tv_descripcion"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Ingresa tu número de personal y contraseña para acceder"
+        android:textAlignment="center"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/tv_titulo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"/>
+
+    <!-- Número de personal -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_numero_personal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Número de personal"
+        app:layout_constraintTop_toBottomOf="@id/tv_descripcion"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_numero_personal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:maxLength="25"
+            android:inputType="text"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Contraseña -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/til_password"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Contraseña"
+        app:endIconMode="password_toggle"
+        app:layout_constraintTop_toBottomOf="@id/til_numero_personal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:maxLength="25"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Botón -->
+    <Button
+        android:id="@+id/btn_ingresar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Iniciar sesión"
+        android:textAllCaps="false"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/til_password"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

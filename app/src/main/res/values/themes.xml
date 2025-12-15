@@ -1,0 +1,12 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+<!-- Base application theme. -->
+
+<style name="Base.Theme.PacketWorldMT" parent="Theme.Material3.DayNight.NoActionBar">
+    <item name="colorPrimary">@color/azul</item>
+</style>
+
+
+
+
+<style name="Theme.PacketWorldMT" parent="Base.Theme.PacketWorldMT" />
+</resources>
