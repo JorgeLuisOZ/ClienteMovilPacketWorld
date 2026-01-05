@@ -1,160 +1,162 @@
 package com.example.packetworldmt
 
-import android.app.Activity
-import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Bundle
-import android.util.Base64
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import com.example.packetworldmt.databinding.ActivityMainBinding
-import com.example.packetworldmt.dto.RSAutenticacionAlumno
-import com.example.packetworldmt.dto.Respuesta
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.packetworld.databinding.ActivityMainBinding
+import com.example.packetworldmt.dto.RSAutenticacionColaborador
+import com.example.packetworldmt.poko.Colaborador
+import com.example.packetworldmt.poko.Envio
 import com.example.packetworldmt.util.Constantes
 import com.google.gson.Gson
 import com.koushikdutta.ion.Ion
-import java.io.ByteArrayOutputStream
-import java.io.InputStream
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var alumno : Alumno
-    private var fotoPerfilBytes : ByteArray ? = null
+    private lateinit var colaborador: Colaborador
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
-        mostrarInformacionAlumno()
-    }
+        setContentView(binding.root)
 
-    override fun onStart(){
-        super.onStart()
-        descargarFotoAlumno(idAlumno = alumno.idAlumno)
-        binding.ivSeleccionFoto.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK)
-            intent.type = "image/*"
-            seleccionarFotoPerfil.launch(intent)
+        cargarColaboradorDesdeIntent()
+        configurarRecycler()
+
+        binding.fabPerfil.setOnClickListener {
+            //irPerfilColaborador()
         }
 
-        binding.ivEditarAlumno.setOnClickListener {
-            val gson = Gson()
-            val jsonAlumno : String = gson.toJson(alumno)
-            val intent = Intent(this@MainActivity, EdicionAlumnoActivity::class.java)
-            intent.putExtra("alumno", jsonAlumno)
-            startActivity(intent)
-        }
-    }
-
-    fun mostrarInformacionAlumno(){
-        try{
-            val jsonAlumno : String? = intent.getStringExtra("alumno")
-            if(jsonAlumno != null){
-                val gson = Gson()
-                val respuestaLogin : RSAutenticacionAlumno = gson.fromJson(jsonAlumno,
-                    RSAutenticacionAlumno::class.java)
-                alumno = respuestaLogin.alumno!!
-                binding.tvMatricula.text = alumno.matricula
-                binding.tvNombre.text = "${alumno.nombre} ${alumno.apellidoPaterno} ${alumno.apellidoMaterno}"
-                binding.tvCorreo.text = alumno.correo
-                binding.tvFechaNacimiento.text = alumno.fechaNacimiento
-                binding.tvCarrera.text = alumno.carrera
-                binding.tvFacultad.text = alumno.facultad
-            }
-        } catch (e : Exception){
-            Toast.makeText(this@MainActivity, "Error al cargar la información del alumno(a)", Toast.LENGTH_LONG).show()
-        }
-    }
-
-    fun descargarFotoAlumno(idAlumno : Int){
-        Ion.with(this@MainActivity).load("GET", "${Constantes().URL_API}alumno/obtener-foto/${idAlumno}").asString()
-            .setCallback { e, result ->
-            if(e == null){
-                cargarFotoPerfilAPI(result)
-            } else {
-                Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_LONG).show()
-            }
-
-        }
-    }
-
-    fun cargarFotoPerfilAPI(json : String){
-        try{
-            if (json.isNotEmpty()){
-                val gson = Gson()
-                val alumno : Alumno = gson.fromJson(json, Alumno::class.java)
-                if(alumno.fotoBase64 != null){
-                    val imgBytes = Base64.decode(alumno.fotoBase64, Base64.DEFAULT)
-                    val imgBitMap = BitmapFactory.decodeByteArray(imgBytes, 0, imgBytes.size)
-                    binding.ivFotoPerfil.setImageBitmap(imgBitMap)
-                } else {
-                    Toast.makeText(this@MainActivity, "No cuentas con foto de perfil", Toast.LENGTH_LONG).show()
-                }
-            }
-        } catch (e: Exception){
-            Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_LONG).show()
-        }
-    }
-
-    fun subirFotoPerfil(){
-        Ion.with(this@MainActivity).load("PUT", "${Constantes().URL_API}alumno/subir-foto/${alumno.idAlumno}")
-            .setByteArrayBody(fotoPerfilBytes).asString().setCallback { e, result ->
-                if (e == null){
-                    verificarEnvioFoto(result)
-                } else{
-                    Toast.makeText(this@MainActivity, "Error al enviar foto", Toast.LENGTH_LONG).show()
-                }
-            }
-    }
-
-    fun verificarEnvioFoto(result : String){
-        try{
-            val gson = Gson()
-            val respuesta = gson.fromJson(result, Respuesta::class.java)
-            if(!respuesta.error){
-                Toast.makeText(this@MainActivity, respuesta.mensaje, Toast.LENGTH_LONG).show()
-                descargarFotoAlumno(alumno.idAlumno)
-            }
-        } catch (e : Exception){
-            e.printStackTrace()
-            android.util.Log.d("UPLOAD_ERROR", "Error: ${e.message}")
-            Toast.makeText(this@MainActivity, "Error: ${e.message}", Toast.LENGTH_LONG).show()
-        }
-    }
-
-    // IMPLEMENTACIÓN DE SELECCIÓN DE FOTO
-    private val seleccionarFotoPerfil = this.registerForActivityResult ( ActivityResultContracts.StartActivityForResult() ){ result ->
-        if(result.resultCode == Activity.RESULT_OK){
-            val data = result.data
-            val imgURI = data?.data
-            if(imgURI != null){
-                fotoPerfilBytes = uriToByteArray(uri = imgURI)
-                if(fotoPerfilBytes != null){
-                    //ENVIAR LA FOTO AL SERVICIO
-                    subirFotoPerfil()
-                }
-            }
+        val idConductor = colaborador.idColaborador
+        if (idConductor != null && idConductor > 0) {
+            cargarEnvios(idConductor)
         } else {
-            Toast.makeText(this@MainActivity, "Selección de foto cancelada ", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "No se pudo obtener el id del conductor", Toast.LENGTH_LONG).show()
         }
     }
 
-    private fun uriToByteArray(uri: Uri): ByteArray? {
-        return try {
-            val inputStream: InputStream? = contentResolver.openInputStream(uri)
-            val bitmap = BitmapFactory.decodeStream(inputStream)
-            val byteArrayOutputStream = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
-            byteArrayOutputStream.toByteArray()
+    private fun cargarColaboradorDesdeIntent() {
+        try {
+            val jsonColaborador = intent.getStringExtra("colaborador")
+            if (jsonColaborador.isNullOrEmpty()) {
+                Toast.makeText(this, "No se recibió información del colaborador", Toast.LENGTH_LONG).show()
+                finish()
+                return
+            }
+
+            val gson = Gson()
+            val respuesta = gson.fromJson(jsonColaborador, RSAutenticacionColaborador::class.java)
+
+            if (respuesta.error || respuesta.colaborador == null) {
+                Toast.makeText(this, respuesta.mensaje ?: "No fue posible validar la sesión", Toast.LENGTH_LONG).show()
+                finish()
+                return
+            }
+
+            colaborador = respuesta.colaborador!!
+
+            // Bienvenida grande
+            val nombreCompleto = buildString {
+                append(colaborador.nombre)
+                if (!colaborador.apellidoPaterno.isNullOrEmpty()) append(" ").append(colaborador.apellidoPaterno)
+                if (!colaborador.apellidoMaterno.isNullOrEmpty()) append(" ").append(colaborador.apellidoMaterno)
+            }
+            binding.tvBienvenida.text = "Bienvenido(a), $nombreCompleto"
+
         } catch (e: Exception) {
-            e.printStackTrace()
-            null
+            Toast.makeText(this, "Error al cargar la sesión del colaborador", Toast.LENGTH_LONG).show()
+            finish()
         }
     }
 
+    private fun configurarRecycler() {
+        binding.rvEnvios.layoutManager = LinearLayoutManager(this)
+
+        // TODO: cuando tengas el modelo de Envio y su adapter, lo conectas aquí.
+        // binding.rvEnvios.adapter = EnviosAdapter(listaEnvios) { envio ->
+        //     abrirDetalleEnvio(envio)
+        // }
+    }
+
+    private fun cargarEnvios(idConductor: Int) {
+
+        Ion.getDefault(this).conscryptMiddleware.enable(false)
+
+        Ion.with(this)
+            .load(
+                "GET",
+                "${Constantes().URL_API}envio/consultar-por-conductor/$idConductor"
+            )
+            .asString()
+            .setCallback { e, result ->
+
+                if (e != null) {
+                    Toast.makeText(
+                        this,
+                        "Error al conectar con el servidor",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    return@setCallback
+                }
+
+                if (result.isNullOrEmpty()) {
+                    Toast.makeText(
+                        this,
+                        "No se recibieron envíos",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@setCallback
+                }
+
+                try {
+                    val gson = Gson()
+
+                    val listaEnvios: List<Envio> =
+                        gson.fromJson(result, Array<Envio>::class.java).toList()
+
+                    if (listaEnvios.isEmpty()) {
+                        Toast.makeText(
+                            this,
+                            "No tienes envíos asignados",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    } else {
+                        mostrarEnvios(listaEnvios)
+                    }
+
+                } catch (ex: Exception) {
+                    Toast.makeText(
+                        this,
+                        "Error al procesar los envíos",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    ex.printStackTrace()
+                }
+            }
+    }
+
+    private fun mostrarEnvios(envios: List<Envio>) {
+        binding.rvEnvios.layoutManager = LinearLayoutManager(this)
+        /*binding.rvEnvios.adapter = EnvioAdapter(envios) { envio ->
+            abrirDetalleEnvio(envio)
+        }*/
+    }
+
+
+    /*private fun irPerfilColaborador() {
+        val gson = Gson()
+        val json = gson.toJson(colaborador)
+
+        val intent = Intent(this, PerfilColaboradorActivity::class.java)
+        intent.putExtra("colaborador", json)
+        startActivity(intent)
+    }*/
+
+    // private fun abrirDetalleEnvio(envio: Envio) {
+    //     val intent = Intent(this, DetalleEnvioActivity::class.java)
+    //     intent.putExtra("envio", Gson().toJson(envio))
+    //     startActivity(intent)
+    // }
 }
