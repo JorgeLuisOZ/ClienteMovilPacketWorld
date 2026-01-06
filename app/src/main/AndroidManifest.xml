@@ -25,6 +25,7 @@
             android:name=".MainActivity"
             android:exported="false" />
         <activity android:name=".DetalleEnvioActivity" />
+        <activity android:name=".EdicionColaboradorActivity" />
     </application>
 
 </manifest>
