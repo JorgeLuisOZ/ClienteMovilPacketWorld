@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         adapter = EnvioAdapter(this, emptyList()) { envio ->
             val intent = Intent(this, DetalleEnvioActivity::class.java)
             intent.putExtra("envio", Gson().toJson(envio))
+            intent.putExtra("idColaboradorSesion", colaborador.idColaborador ?: 0)
             startActivity(intent)
         }
 
@@ -38,13 +39,16 @@ class MainActivity : AppCompatActivity() {
 
         binding.fabPerfil.setOnClickListener {
             val intent = Intent(this, EdicionColaboradorActivity::class.java)
-            intent.putExtra("colaborador", Gson().toJson(
-                RSAutenticacionColaborador(
-                    error = false,
-                    mensaje = "OK",
-                    colaborador = colaborador
+            intent.putExtra(
+                "colaborador",
+                Gson().toJson(
+                    RSAutenticacionColaborador(
+                        error = false,
+                        mensaje = "OK",
+                        colaborador = colaborador
+                    )
                 )
-            ))
+            )
             startActivity(intent)
         }
 

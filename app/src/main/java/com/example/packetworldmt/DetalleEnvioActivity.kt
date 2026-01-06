@@ -1,17 +1,18 @@
 package com.example.packetworldmt
 
 import android.app.AlertDialog
+import android.os.Bundle
 import android.text.InputType
+import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Spinner
-import android.os.Bundle
-import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.packetworldmt.databinding.ActivityDetalleEnvioBinding
+import com.example.packetworldmt.dto.Respuesta
 import com.example.packetworldmt.poko.Cliente
 import com.example.packetworldmt.poko.Destinatario
 import com.example.packetworldmt.poko.Envio
@@ -26,16 +27,21 @@ class DetalleEnvioActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetalleEnvioBinding
     private lateinit var envio: Envio
 
+    private var idColaboradorSesion: Int = 0
+
+    private val ESTATUS_RECIBIDO = 1
+    private val ESTATUS_PROCESADO = 2
     private val ESTATUS_TRANSITO = 3
     private val ESTATUS_DETENIDO = 4
     private val ESTATUS_ENTREGADO = 5
     private val ESTATUS_CANCELADO = 6
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetalleEnvioBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        idColaboradorSesion = intent.getIntExtra("idColaboradorSesion", 0)
 
         val jsonEnvio = intent.getStringExtra("envio")
         if (jsonEnvio.isNullOrEmpty()) {
@@ -45,6 +51,7 @@ class DetalleEnvioActivity : AppCompatActivity() {
         }
 
         envio = Gson().fromJson(jsonEnvio, Envio::class.java)
+
         pintarBaseEnvio(envio)
 
         envio.idSucursal?.takeIf { it > 0 }?.let { cargarSucursal(it) }
@@ -55,9 +62,9 @@ class DetalleEnvioActivity : AppCompatActivity() {
 
     private fun pintarBaseEnvio(envio: Envio) {
         binding.tvGuiaDetalle.text = "Guía: ${envio.numeroGuia ?: "N/D"}"
-        binding.tvEstatusDetalle.text = "${envio.estatusActual ?: "N/D"}"
+        binding.tvEstatusDetalle.text = envio.estatusActual ?: "N/D"
 
-        binding.tvSucursalDetalle.text = "${envio.codigoSucursal ?: "Cargando..."}"
+        binding.tvSucursalDetalle.text = envio.codigoSucursal ?: "Cargando..."
 
         val nombreDest = listOfNotNull(envio.nombreDestinatario, envio.apellidoPaternoDestinatario)
             .joinToString(" ").trim().ifBlank { "N/D" }
@@ -76,10 +83,12 @@ class DetalleEnvioActivity : AppCompatActivity() {
             textSize = 14f
         })
 
-        binding.btnActualizarEstatus.setOnClickListener {
-            mostrarDialogoActualizarEstatus()
-        }
+        binding.btnActualizarEstatus.setOnClickListener { mostrarDialogoActualizarEstatus() }
 
+        actualizarEstadoBoton()
+    }
+
+    private fun actualizarEstadoBoton() {
         val idActual = envio.idEstatusActual ?: 0
         if (idActual == ESTATUS_ENTREGADO || idActual == ESTATUS_CANCELADO) {
             binding.btnActualizarEstatus.isEnabled = false
@@ -139,7 +148,6 @@ class DetalleEnvioActivity : AppCompatActivity() {
                 }
                 try {
                     val d = Gson().fromJson(result, Destinatario::class.java)
-                    // Aquí no uso nombre porque tu Envio ya trae nombre del destinatario
                     binding.tvDireccionDetalle.text = "Dirección destino:\n${formatearDireccionDestinatario(d)}"
                 } catch (_: Exception) {
                     binding.tvDireccionDetalle.text = "Dirección destino: No disponible"
@@ -193,9 +201,8 @@ class DetalleEnvioActivity : AppCompatActivity() {
         val peso = p.peso?.let { "${it} kg" } ?: "N/D"
         val dims = if (p.alto != null && p.ancho != null && p.profundidad != null) {
             "${p.alto} x ${p.ancho} x ${p.profundidad} cm"
-        } else {
-            "Dimensiones: N/D"
-        }
+        } else "Dimensiones: N/D"
+
         return "Paquete $n: $desc\nPeso: $peso\n$dims"
     }
 
@@ -251,7 +258,6 @@ class DetalleEnvioActivity : AppCompatActivity() {
         }
 
         val opciones = obtenerOpcionesSegunEstatusActual(idActual)
-
         if (opciones.isEmpty()) {
             Toast.makeText(this, "No hay cambios de estatus disponibles.", Toast.LENGTH_LONG).show()
             return
@@ -282,13 +288,14 @@ class DetalleEnvioActivity : AppCompatActivity() {
         AlertDialog.Builder(this)
             .setTitle("Actualizar estatus")
             .setView(layout)
-            .setPositiveButton("Guardar") { _, _ ->
+            .setPositiveButton("Guardar") { dialog, _ ->
                 val (nombre, idNuevo) = opciones[spEstatus.selectedItemPosition]
                 val comentario = etComentario.text.toString().trim()
 
                 val requiereComentario = (idNuevo == ESTATUS_DETENIDO || idNuevo == ESTATUS_CANCELADO)
                 if (requiereComentario && comentario.isBlank()) {
                     Toast.makeText(this, "Debes escribir un comentario para $nombre.", Toast.LENGTH_LONG).show()
+                    dialog.dismiss()
                     mostrarDialogoActualizarEstatus()
                     return@setPositiveButton
                 }
@@ -311,16 +318,17 @@ class DetalleEnvioActivity : AppCompatActivity() {
             return
         }
 
-        val idColaborador = envio.idConductor
-        if (idColaborador == null || idColaborador <= 0) {
-            Toast.makeText(this, "No se pudo obtener el id del conductor", Toast.LENGTH_LONG).show()
+        // IMPORTANTÍSIMO: el que cambia el estatus es el colaborador en sesión (no idConductor del envío)
+        if (idColaboradorSesion <= 0) {
+            Toast.makeText(this, "No se pudo obtener el id del colaborador en sesión", Toast.LENGTH_LONG).show()
             return
         }
 
         val envioReq = mutableMapOf<String, Any>(
             "numeroGuia" to guia,
             "idEstatusActual" to idEstatusNuevo,
-            "idCreadoPor" to idColaborador
+            "idCreadoPor" to idColaboradorSesion,
+            "comentario" to comentario
         )
 
         val jsonBody = Gson().toJson(envioReq)
@@ -346,14 +354,11 @@ class DetalleEnvioActivity : AppCompatActivity() {
                 Log.d("PUT_ESTATUS_RES", result)
 
                 try {
-                    val resp = Gson().fromJson(result, com.example.packetworldmt.dto.Respuesta::class.java)
+                    val resp = Gson().fromJson(result, Respuesta::class.java)
+                    Toast.makeText(this, resp.mensaje, Toast.LENGTH_LONG).show()
+
                     if (!resp.error) {
-                        Toast.makeText(this, resp.mensaje, Toast.LENGTH_SHORT).show()
-
                         recargarEnvio()
-
-                    } else {
-                        Toast.makeText(this, resp.mensaje, Toast.LENGTH_LONG).show()
                     }
                 } catch (ex: Exception) {
                     ex.printStackTrace()
@@ -364,59 +369,52 @@ class DetalleEnvioActivity : AppCompatActivity() {
 
     private fun obtenerOpcionesSegunEstatusActual(idActual: Int): List<Pair<String, Int>> {
         return when (idActual) {
-            1, 2 -> listOf(
-                "En tránsito" to ESTATUS_TRANSITO
-            )
 
-            // En tránsito
-            ESTATUS_TRANSITO -> listOf(
-                "Detenido" to ESTATUS_DETENIDO,
-                "Entregado" to ESTATUS_ENTREGADO,
+            ESTATUS_RECIBIDO -> listOf(
+                "Procesado" to ESTATUS_PROCESADO,
                 "Cancelado" to ESTATUS_CANCELADO
             )
 
-            // Detenido
+            ESTATUS_PROCESADO -> listOf(
+                "En tránsito" to ESTATUS_TRANSITO,
+                "Cancelado" to ESTATUS_CANCELADO
+            )
+
+            ESTATUS_TRANSITO -> listOf(
+                "Detenido" to ESTATUS_DETENIDO,
+                "Entregado" to ESTATUS_ENTREGADO
+            )
+
             ESTATUS_DETENIDO -> listOf(
                 "En tránsito" to ESTATUS_TRANSITO,
                 "Cancelado" to ESTATUS_CANCELADO
             )
 
-            // Entregado / Cancelado -> nada
             ESTATUS_ENTREGADO, ESTATUS_CANCELADO -> emptyList()
 
-            else -> listOf(
-                "En tránsito" to ESTATUS_TRANSITO,
-                "Detenido" to ESTATUS_DETENIDO,
-                "Entregado" to ESTATUS_ENTREGADO,
-                "Cancelado" to ESTATUS_CANCELADO
-            )
+            else -> emptyList()
         }
     }
 
     private fun recargarEnvio() {
-        val idConductor = envio.idConductor
-        if (idConductor == null || idConductor <= 0) return
+        if (idColaboradorSesion <= 0) return
 
         Ion.with(this)
-            .load("GET", "${Constantes().URL_API}envio/obtener-por-conductor/$idConductor")
+            .load("GET", "${Constantes().URL_API}envio/obtener-por-conductor/$idColaboradorSesion")
             .asString()
             .setCallback { e, result ->
                 if (e != null || result.isNullOrEmpty()) return@setCallback
+
                 try {
-                    envio = Gson().fromJson(result, Envio::class.java)
-                    binding.tvEstatusDetalle.text = envio.estatusActual ?: "N/D"
+                    val lista = Gson().fromJson(result, Array<Envio>::class.java).toList()
+                    val actualizado = lista.firstOrNull { it.numeroGuia == envio.numeroGuia }
+
+                    if (actualizado != null) {
+                        envio = actualizado
+                        binding.tvEstatusDetalle.text = envio.estatusActual ?: "N/D"
+                        actualizarEstadoBoton()
+                    }
                 } catch (_: Exception) { }
             }
-
-        val idActual = envio.idEstatusActual ?: 0
-        if (idActual == ESTATUS_ENTREGADO || idActual == ESTATUS_CANCELADO) {
-            binding.btnActualizarEstatus.isEnabled = false
-            binding.btnActualizarEstatus.text = "Estatus final"
-        } else {
-            binding.btnActualizarEstatus.isEnabled = true
-            binding.btnActualizarEstatus.text = "Actualizar estatus"
-        }
-
     }
-
 }
