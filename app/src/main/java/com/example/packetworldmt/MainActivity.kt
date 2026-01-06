@@ -1,10 +1,12 @@
 package com.example.packetworldmt
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.packetworld.databinding.ActivityMainBinding
+import com.example.packetworldmt.databinding.ActivityMainBinding
 import com.example.packetworldmt.dto.RSAutenticacionColaborador
 import com.example.packetworldmt.poko.Colaborador
 import com.example.packetworldmt.poko.Envio
@@ -16,6 +18,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var colaborador: Colaborador
+    private lateinit var adapter: EnvioAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,18 +26,36 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         cargarColaboradorDesdeIntent()
-        configurarRecycler()
+
+        adapter = EnvioAdapter(this, emptyList()) { envio ->
+            val intent = Intent(this, DetalleEnvioActivity::class.java)
+            intent.putExtra("envio", Gson().toJson(envio))
+            startActivity(intent)
+        }
+
+        binding.rvEnvios.layoutManager = LinearLayoutManager(this)
+        binding.rvEnvios.adapter = adapter
 
         binding.fabPerfil.setOnClickListener {
-            //irPerfilColaborador()
+            val intent = Intent(this, EdicionColaboradorActivity::class.java)
+            intent.putExtra("colaborador", Gson().toJson(
+                RSAutenticacionColaborador(
+                    error = false,
+                    mensaje = "OK",
+                    colaborador = colaborador
+                )
+            ))
+            startActivity(intent)
         }
 
-        val idConductor = colaborador.idColaborador
-        if (idConductor != null && idConductor > 0) {
-            cargarEnvios(idConductor)
-        } else {
-            Toast.makeText(this, "No se pudo obtener el id del conductor", Toast.LENGTH_LONG).show()
-        }
+        val idConductor = colaborador.idColaborador ?: 0
+        if (idConductor > 0) cargarEnvios(idConductor) else Toast.makeText(this, "No se pudo obtener id conductor", Toast.LENGTH_LONG).show()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val idConductor = colaborador.idColaborador ?: 0
+        if (idConductor > 0) cargarEnvios(idConductor)
     }
 
     private fun cargarColaboradorDesdeIntent() {
@@ -46,9 +67,7 @@ class MainActivity : AppCompatActivity() {
                 return
             }
 
-            val gson = Gson()
-            val respuesta = gson.fromJson(jsonColaborador, RSAutenticacionColaborador::class.java)
-
+            val respuesta = Gson().fromJson(jsonColaborador, RSAutenticacionColaborador::class.java)
             if (respuesta.error || respuesta.colaborador == null) {
                 Toast.makeText(this, respuesta.mensaje ?: "No fue posible validar la sesión", Toast.LENGTH_LONG).show()
                 finish()
@@ -57,7 +76,6 @@ class MainActivity : AppCompatActivity() {
 
             colaborador = respuesta.colaborador!!
 
-            // Bienvenida grande
             val nombreCompleto = buildString {
                 append(colaborador.nombre)
                 if (!colaborador.apellidoPaterno.isNullOrEmpty()) append(" ").append(colaborador.apellidoPaterno)
@@ -65,98 +83,47 @@ class MainActivity : AppCompatActivity() {
             }
             binding.tvBienvenida.text = "Bienvenido(a), $nombreCompleto"
 
-        } catch (e: Exception) {
-            Toast.makeText(this, "Error al cargar la sesión del colaborador", Toast.LENGTH_LONG).show()
+        } catch (_: Exception) {
+            Toast.makeText(this, "Error al cargar sesión", Toast.LENGTH_LONG).show()
             finish()
         }
     }
 
-    private fun configurarRecycler() {
-        binding.rvEnvios.layoutManager = LinearLayoutManager(this)
-
-        // TODO: cuando tengas el modelo de Envio y su adapter, lo conectas aquí.
-        // binding.rvEnvios.adapter = EnviosAdapter(listaEnvios) { envio ->
-        //     abrirDetalleEnvio(envio)
-        // }
-    }
-
     private fun cargarEnvios(idConductor: Int) {
-
-        Ion.getDefault(this).conscryptMiddleware.enable(false)
-
         Ion.with(this)
-            .load(
-                "GET",
-                "${Constantes().URL_API}envio/consultar-por-conductor/$idConductor"
-            )
+            .load("GET", "${Constantes().URL_API}envio/obtener-por-conductor/$idConductor")
             .asString()
             .setCallback { e, result ->
 
                 if (e != null) {
-                    Toast.makeText(
-                        this,
-                        "Error al conectar con el servidor",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    Toast.makeText(this, "Error al conectar con el servidor", Toast.LENGTH_LONG).show()
+                    mostrarSinEnvios()
                     return@setCallback
                 }
 
                 if (result.isNullOrEmpty()) {
-                    Toast.makeText(
-                        this,
-                        "No se recibieron envíos",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    mostrarSinEnvios()
                     return@setCallback
                 }
 
                 try {
-                    val gson = Gson()
-
-                    val listaEnvios: List<Envio> =
-                        gson.fromJson(result, Array<Envio>::class.java).toList()
-
-                    if (listaEnvios.isEmpty()) {
-                        Toast.makeText(
-                            this,
-                            "No tienes envíos asignados",
-                            Toast.LENGTH_LONG
-                        ).show()
+                    val lista = Gson().fromJson(result, Array<Envio>::class.java).toList()
+                    if (lista.isEmpty()) {
+                        mostrarSinEnvios()
                     } else {
-                        mostrarEnvios(listaEnvios)
+                        binding.rvEnvios.visibility = View.VISIBLE
+                        binding.tvSubtitulo.text = "Toca un envío para ver detalle y actualizar estatus."
+                        adapter.actualizarLista(lista)
                     }
-
-                } catch (ex: Exception) {
-                    Toast.makeText(
-                        this,
-                        "Error al procesar los envíos",
-                        Toast.LENGTH_LONG
-                    ).show()
-                    ex.printStackTrace()
+                } catch (_: Exception) {
+                    Toast.makeText(this, "Error al procesar envíos", Toast.LENGTH_LONG).show()
+                    mostrarSinEnvios()
                 }
             }
     }
 
-    private fun mostrarEnvios(envios: List<Envio>) {
-        binding.rvEnvios.layoutManager = LinearLayoutManager(this)
-        /*binding.rvEnvios.adapter = EnvioAdapter(envios) { envio ->
-            abrirDetalleEnvio(envio)
-        }*/
+    private fun mostrarSinEnvios() {
+        binding.rvEnvios.visibility = View.GONE
+        binding.tvSubtitulo.text = "No tienes envíos asignados."
     }
-
-
-    /*private fun irPerfilColaborador() {
-        val gson = Gson()
-        val json = gson.toJson(colaborador)
-
-        val intent = Intent(this, PerfilColaboradorActivity::class.java)
-        intent.putExtra("colaborador", json)
-        startActivity(intent)
-    }*/
-
-    // private fun abrirDetalleEnvio(envio: Envio) {
-    //     val intent = Intent(this, DetalleEnvioActivity::class.java)
-    //     intent.putExtra("envio", Gson().toJson(envio))
-    //     startActivity(intent)
-    // }
 }

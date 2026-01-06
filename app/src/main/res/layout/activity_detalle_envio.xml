@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F3F4F6"
+    android:padding="16dp"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="18dp"
+            app:cardElevation="10dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="38dp"
+                        android:layout_height="38dp"
+                        android:src="@android:drawable/ic_menu_info_details"
+                        app:tint="#2563EB"
+                        android:contentDescription="Detalle" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="12dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Detalle del envío"
+                            android:textStyle="bold"
+                            android:textSize="18sp"
+                            android:textColor="#111827"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Información de sucursal, destinatario, cliente y paquetes"
+                            android:textSize="12sp"
+                            android:textColor="#6B7280"
+                            android:layout_marginTop="2dp"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginBottom="14dp"
+                    android:background="#E5E7EB"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="GUÍA"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="#6B7280"/>
+
+                <TextView
+                    android:id="@+id/tvGuiaDetalle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Guía: "
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:textColor="#111827"
+                    android:layout_marginTop="4dp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="14dp" />
+
+                <TextView
+                    android:id="@+id/tvEstatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="ESTATUS"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="#6B7280"/>
+
+                <TextView
+                    android:id="@+id/tvEstatusDetalle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="Cargando.."
+                    android:textSize="15sp"
+                    android:textColor="#111827"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="14dp" />
+
+                <TextView
+                    android:id="@+id/tvSucursal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="SUCURSAL ORIGEN"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="#6B7280"/>
+
+                <TextView
+                    android:id="@+id/tvSucursalDetalle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:lineSpacingExtra="2dp"
+                    android:text="Sucursal origen:"
+                    android:textSize="14sp"
+                    android:textColor="#111827"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="14dp" />
+
+                <TextView
+                    android:id="@+id/tvDestinatarioDetalle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="DESTINATARIO"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="#6B7280"/>
+
+                <TextView
+                    android:id="@+id/tvDireccionDetalle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:lineSpacingExtra="2dp"
+                    android:text="Dirección destino:"
+                    android:textSize="14sp"
+                    android:textColor="#111827"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="14dp" />
+
+                <TextView
+                    android:id="@+id/tvClienteDetalle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="CLIENTE"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="#6B7280"/>
+
+                <TextView
+                    android:id="@+id/tvContactoDetalle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:lineSpacingExtra="2dp"
+                    android:text="Contacto:"
+                    android:textSize="14sp"
+                    android:textColor="#111827"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="14dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="PAQUETES"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="#6B7280"/>
+
+                <LinearLayout
+                    android:id="@+id/llPaquetes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="10dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="18dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnActualizarEstatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Actualizar estatus"
+                    android:textAllCaps="false"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    app:cornerRadius="14dp"
+                    app:icon="@android:drawable/ic_menu_edit"
+                    app:iconPadding="10dp"
+                    app:iconGravity="textStart" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="18dp" />
+
+    </LinearLayout>
+</ScrollView>

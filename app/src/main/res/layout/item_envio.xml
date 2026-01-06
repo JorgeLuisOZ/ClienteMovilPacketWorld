@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="4dp"
+    android:layout_marginVertical="8dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="8dp"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="18dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@android:drawable/ic_menu_mylocation"
+                app:tint="#2563EB"
+                android:contentDescription="Icono envío" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:text="Resumen del envío"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#111827"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="12dp" />
+
+        <TextView
+            android:id="@+id/tvGuia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Guía: PW-123456"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="#111827"/>
+
+        <TextView
+            android:id="@+id/tvDestino"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Destino: Cargando..."
+            android:textSize="14sp"
+            android:textColor="#374151"
+            android:layout_marginTop="6dp"/>
+
+        <TextView
+            android:id="@+id/tvEstatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Estatus: Cargando..."
+            android:textSize="14sp"
+            android:textColor="#374151"
+            android:layout_marginTop="4dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="14dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnVerDetalle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ver detalles"
+            android:textAllCaps="false"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            app:cornerRadius="14dp"
+            app:icon="@android:drawable/ic_menu_info_details"
+            app:iconPadding="10dp"
+            app:iconGravity="textStart" />
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

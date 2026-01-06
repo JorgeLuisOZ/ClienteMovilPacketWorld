@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.packetworld.databinding.ActivityLoginBinding
+import com.example.packetworldmt.databinding.ActivityLoginBinding
 import com.example.packetworldmt.dto.RSAutenticacionColaborador
 import com.example.packetworldmt.util.Constantes
 import com.google.gson.Gson

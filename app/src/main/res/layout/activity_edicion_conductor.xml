@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F3F4F6"
+    android:fillViewport="true"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvTituloPerfil"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mi perfil"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:textColor="#111827"
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="12dp" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="18dp"
+            app:cardElevation="10dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="18dp">
+
+                <!-- =========================
+                     BLOQUEADOS
+                ========================== -->
+
+                <!-- Número de personal -->
+                <TextView
+                    android:id="@+id/tvNumeroPersonalLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Número de personal"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="#6B7280"
+                    android:labelFor="@id/etNumeroPersonal" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    app:boxBackgroundMode="outline"
+                    app:boxCornerRadiusTopStart="14dp"
+                    app:boxCornerRadiusTopEnd="14dp"
+                    app:boxCornerRadiusBottomStart="14dp"
+                    app:boxCornerRadiusBottomEnd="14dp"
+                    app:endIconMode="none">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etNumeroPersonal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:enabled="false"
+                        android:focusable="false"
+                        android:clickable="false"
+                        android:inputType="none"
+                        android:textColor="#111827"
+                        android:textColorHint="#9CA3AF"
+                        android:alpha="0.85" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Rol -->
+                <TextView
+                    android:id="@+id/tvRolLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Rol"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="#6B7280"
+                    android:layout_marginTop="12dp"
+                    android:labelFor="@id/etRol" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    app:boxBackgroundMode="outline"
+                    app:boxCornerRadiusTopStart="14dp"
+                    app:boxCornerRadiusTopEnd="14dp"
+                    app:boxCornerRadiusBottomStart="14dp"
+                    app:boxCornerRadiusBottomEnd="14dp"
+                    app:endIconMode="none">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etRol"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:enabled="false"
+                        android:focusable="false"
+                        android:clickable="false"
+                        android:inputType="none"
+                        android:textColor="#111827"
+                        android:textColorHint="#9CA3AF"
+                        android:alpha="0.85" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Sucursal -->
+                <TextView
+                    android:id="@+id/tvSucursalLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Sucursal"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="#6B7280"
+                    android:layout_marginTop="12dp"
+                    android:labelFor="@id/etSucursal" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    app:boxBackgroundMode="outline"
+                    app:boxCornerRadiusTopStart="14dp"
+                    app:boxCornerRadiusTopEnd="14dp"
+                    app:boxCornerRadiusBottomStart="14dp"
+                    app:boxCornerRadiusBottomEnd="14dp"
+                    app:endIconMode="none">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etSucursal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:enabled="false"
+                        android:focusable="false"
+                        android:clickable="false"
+                        android:inputType="none"
+                        android:textColor="#111827"
+                        android:textColorHint="#9CA3AF"
+                        android:alpha="0.85" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="#E5E7EB" />
+
+                <!-- =========================
+                     EDITABLES
+                ========================== -->
+
+                <!-- Nombre -->
+                <TextView
+                    android:id="@+id/tvNombreLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Nombre"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="#6B7280"
+                    android:labelFor="@id/etNombre" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    app:boxBackgroundMode="outline"
+                    app:boxCornerRadiusTopStart="14dp"
+                    app:boxCornerRadiusTopEnd="14dp"
+                    app:boxCornerRadiusBottomStart="14dp"
+                    app:boxCornerRadiusBottomEnd="14dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etNombre"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Apellido paterno -->
+                <TextView
+                    android:id="@+id/tvApellidoPaternoLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Apellido paterno"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="#6B7280"
+                    android:layout_marginTop="12dp"
+                    android:labelFor="@id/etApellidoPaterno" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    app:boxBackgroundMode="outline"
+                    app:boxCornerRadiusTopStart="14dp"
+                    app:boxCornerRadiusTopEnd="14dp"
+                    app:boxCornerRadiusBottomStart="14dp"
+                    app:boxCornerRadiusBottomEnd="14dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etApellidoPaterno"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Apellido materno -->
+                <TextView
+                    android:id="@+id/tvApellidoMaternoLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Apellido materno"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="#6B7280"
+                    android:layout_marginTop="12dp"
+                    android:labelFor="@id/etApellidoMaterno" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    app:boxBackgroundMode="outline"
+                    app:boxCornerRadiusTopStart="14dp"
+                    app:boxCornerRadiusTopEnd="14dp"
+                    app:boxCornerRadiusBottomStart="14dp"
+                    app:boxCornerRadiusBottomEnd="14dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etApellidoMaterno"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPersonName" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Correo -->
+                <TextView
+                    android:id="@+id/tvCorreoLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Correo"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="#6B7280"
+                    android:layout_marginTop="12dp"
+                    android:labelFor="@id/etCorreo" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    app:boxBackgroundMode="outline"
+                    app:boxCornerRadiusTopStart="14dp"
+                    app:boxCornerRadiusTopEnd="14dp"
+                    app:boxCornerRadiusBottomStart="14dp"
+                    app:boxCornerRadiusBottomEnd="14dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etCorreo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- CURP -->
+                <TextView
+                    android:id="@+id/tvCurpLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="CURP"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="#6B7280"
+                    android:layout_marginTop="12dp"
+                    android:labelFor="@id/etCurp" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    app:boxBackgroundMode="outline"
+                    app:boxCornerRadiusTopStart="14dp"
+                    app:boxCornerRadiusTopEnd="14dp"
+                    app:boxCornerRadiusBottomStart="14dp"
+                    app:boxCornerRadiusBottomEnd="14dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etCurp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textCapCharacters" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Número de licencia -->
+                <TextView
+                    android:id="@+id/tvNumeroLicenciaLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Número de licencia"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="#6B7280"
+                    android:layout_marginTop="12dp"
+                    android:labelFor="@id/etNumeroLicencia" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    app:boxBackgroundMode="outline"
+                    app:boxCornerRadiusTopStart="14dp"
+                    app:boxCornerRadiusTopEnd="14dp"
+                    app:boxCornerRadiusBottomStart="14dp"
+                    app:boxCornerRadiusBottomEnd="14dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etNumeroLicencia"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Guardar -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnActualizar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Guardar cambios"
+                    android:textAllCaps="false"
+                    android:layout_marginTop="18dp"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp"
+                    app:cornerRadius="14dp"
+                    app:icon="@android:drawable/ic_menu_save"
+                    app:iconPadding="10dp"
+                    app:iconGravity="textStart" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="18dp" />
+
+    </LinearLayout>
+</ScrollView>

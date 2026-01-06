@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.packetworld"
+    namespace = "com.example.packetworldmt"
     compileSdk = 35
 
     defaultConfig {
