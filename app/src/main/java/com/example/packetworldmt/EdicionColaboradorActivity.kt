@@ -8,6 +8,7 @@ import com.example.packetworldmt.databinding.ActivityEdicionConductorBinding
 import com.example.packetworldmt.dto.RSAutenticacionColaborador
 import com.example.packetworldmt.dto.Respuesta
 import com.example.packetworldmt.poko.Colaborador
+import com.example.packetworldmt.poko.Sucursal
 import com.example.packetworldmt.util.Constantes
 import com.google.gson.Gson
 import com.koushikdutta.ion.Ion
@@ -49,7 +50,14 @@ class EdicionColaboradorActivity : AppCompatActivity() {
 
             binding.etNumeroPersonal.setText(colaborador.numeroPersonal ?: "")
             binding.etRol.setText(colaborador.rol ?: "")
-            binding.etSucursal.setText(colaborador.idSucursal?.toString() ?: "")
+
+            binding.etSucursal.setText("Cargando...")
+            val idSucursal = colaborador.idSucursal ?: 0
+            if (idSucursal > 0) {
+                cargarNombreSucursal(idSucursal)
+            } else {
+                binding.etSucursal.setText("N/D")
+            }
 
             binding.etNombre.setText(colaborador.nombre ?: "")
             binding.etApellidoPaterno.setText(colaborador.apellidoPaterno ?: "")
@@ -146,4 +154,27 @@ class EdicionColaboradorActivity : AppCompatActivity() {
                 }
             }
     }
+
+    private fun cargarNombreSucursal(idSucursal: Int) {
+        Ion.getDefault(this).conscryptMiddleware.enable(false)
+
+        Ion.with(this)
+            .load("GET", "${Constantes().URL_API}sucursal/obtener-por-id/$idSucursal")
+            .asString()
+            .setCallback { e, result ->
+                if (e != null || result.isNullOrEmpty()) {
+                    binding.etSucursal.setText("No disponible")
+                    return@setCallback
+                }
+
+                try {
+                    val sucursal = Gson().fromJson(result, Sucursal::class.java)
+                    val nombre = sucursal.nombreCorto ?: sucursal.nombreCorto ?: "N/D"
+                    binding.etSucursal.setText(nombre)
+                } catch (_: Exception) {
+                    binding.etSucursal.setText("No disponible")
+                }
+            }
+    }
+
 }

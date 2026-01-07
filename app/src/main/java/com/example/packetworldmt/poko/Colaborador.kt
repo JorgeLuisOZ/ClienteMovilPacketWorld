@@ -14,9 +14,9 @@ data class Colaborador(
     var idRol: Int,
     var rol: String,
     var idSucursal: Int,
-    var sucursal: String,
+    var sucursal: String?,
     var idUnidad: Int,
-    var unidad: String,
+    var unidad: String?,
 
     var fotoBase64: String?
 
