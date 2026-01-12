@@ -29,6 +29,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCerrarSesion"
+        android:layout_width="31dp"
+        android:layout_height="31dp"
+        android:layout_marginTop="8dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:textAllCaps="false"
+        android:textSize="14sp"
+        app:backgroundTint="@android:color/holo_red_dark"
+        app:cornerRadius="20dp"
+        app:icon="@drawable/ic_logout"
+        app:iconGravity="textStart"
+        app:iconPadding="6dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@android:color/white" />
+
     <TextView
         android:id="@+id/tvTitulo"
         android:layout_width="0dp"

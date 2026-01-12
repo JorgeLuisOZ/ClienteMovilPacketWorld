@@ -54,6 +54,11 @@ class MainActivity : AppCompatActivity() {
 
         val idConductor = colaborador.idColaborador ?: 0
         if (idConductor > 0) cargarEnvios(idConductor) else Toast.makeText(this, "No se pudo obtener id conductor", Toast.LENGTH_LONG).show()
+
+        binding.btnCerrarSesion.setOnClickListener {
+            mostrarDialogoCerrarSesion()
+        }
+
     }
 
     override fun onResume() {
@@ -130,4 +135,27 @@ class MainActivity : AppCompatActivity() {
         binding.rvEnvios.visibility = View.GONE
         binding.tvSubtitulo.text = "No tienes envíos asignados."
     }
+
+    private fun mostrarDialogoCerrarSesion() {
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("Cerrar sesión")
+            .setMessage("¿Seguro que deseas cerrar sesión?")
+            .setCancelable(false)
+            .setPositiveButton("Sí") { _, _ ->
+                cerrarSesion()
+            }
+            .setNegativeButton("Cancelar") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    private fun cerrarSesion() {
+        val intent = Intent(this, LoginActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        startActivity(intent)
+        finish()
+    }
+
 }

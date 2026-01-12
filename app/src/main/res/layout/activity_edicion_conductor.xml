@@ -24,6 +24,24 @@
             android:layout_marginTop="8dp"
             android:layout_marginBottom="12dp" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp">
+
+            <ImageView
+                android:id="@+id/imgFotoPerfil"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@drawable/ic_person"
+                android:scaleType="centerCrop"
+                android:contentDescription="Foto de perfil"
+                android:background="#E5E7EB" />
+        </LinearLayout>
+
+
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -37,11 +55,6 @@
                 android:orientation="vertical"
                 android:padding="18dp">
 
-                <!-- =========================
-                     BLOQUEADOS
-                ========================== -->
-
-                <!-- Número de personal -->
                 <TextView
                     android:id="@+id/tvNumeroPersonalLabel"
                     android:layout_width="match_parent"
@@ -76,7 +89,6 @@
                         android:alpha="0.85" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Rol -->
                 <TextView
                     android:id="@+id/tvRolLabel"
                     android:layout_width="match_parent"
@@ -112,7 +124,6 @@
                         android:alpha="0.85" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Sucursal -->
                 <TextView
                     android:id="@+id/tvSucursalLabel"
                     android:layout_width="match_parent"
@@ -155,11 +166,6 @@
                     android:layout_marginBottom="16dp"
                     android:background="#E5E7EB" />
 
-                <!-- =========================
-                     EDITABLES
-                ========================== -->
-
-                <!-- Nombre -->
                 <TextView
                     android:id="@+id/tvNombreLabel"
                     android:layout_width="match_parent"
@@ -187,7 +193,6 @@
                         android:inputType="textPersonName" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Apellido paterno -->
                 <TextView
                     android:id="@+id/tvApellidoPaternoLabel"
                     android:layout_width="match_parent"
@@ -216,7 +221,6 @@
                         android:inputType="textPersonName" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Apellido materno -->
                 <TextView
                     android:id="@+id/tvApellidoMaternoLabel"
                     android:layout_width="match_parent"
@@ -245,7 +249,6 @@
                         android:inputType="textPersonName" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Correo -->
                 <TextView
                     android:id="@+id/tvCorreoLabel"
                     android:layout_width="match_parent"
@@ -274,7 +277,6 @@
                         android:inputType="textEmailAddress" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- CURP -->
                 <TextView
                     android:id="@+id/tvCurpLabel"
                     android:layout_width="match_parent"
@@ -300,10 +302,16 @@
                         android:id="@+id/etCurp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textCapCharacters" />
+                        android:enabled="false"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:clickable="false"
+                        android:inputType="none"
+                        android:textColor="#111827"
+                        android:textColorHint="#9CA3AF"
+                        android:alpha="0.85" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Número de licencia -->
                 <TextView
                     android:id="@+id/tvNumeroLicenciaLabel"
                     android:layout_width="match_parent"
@@ -332,7 +340,6 @@
                         android:inputType="text" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Guardar -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnActualizar"
                     android:layout_width="match_parent"
